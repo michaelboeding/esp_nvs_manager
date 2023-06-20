@@ -10,7 +10,7 @@ In short it allows you to take any object you want and save it directly to nvs a
 1. Create the NVSManager object. The parameter is the name of the storage location.
 
 ```c++
-NVSManager nvsManager = new NVSManager("WifiNetwork");
+NVSManager nvsManager = new NVSManager("storage");
 ```
 
 2. You need to inheret the I_Serializable interface and then implement both the serialize and deserialize methods in order to save the object. 
