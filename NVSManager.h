@@ -12,7 +12,7 @@ class I_Serializable {
 public:
     //virtual ~I_Serializable() {}
     // Each serializable class must provide these methods:
-    virtual std::string serialize() const = 0;
+    virtual std::string serialize() = 0;
     virtual void deserialize(const std::string& serialized) = 0;
 };
 
