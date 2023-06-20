@@ -20,7 +20,7 @@ public:
 class NVSManager {
 public:
     //constructor and destructor
-    NVSManager(const std::string& namespaceName);
+    NVSManager(std::string namespaceName);
     ~NVSManager();
     //template functions - note these have to be in the header file not the cpp file due to the way templates work
 

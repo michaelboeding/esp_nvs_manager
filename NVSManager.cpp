@@ -1,6 +1,7 @@
 #include "NVSManager.h"
 
-NVSManager::NVSManager(const std::string& namespaceName) {
+
+NVSManager::NVSManager(std::string namespaceName) {
     // Initialize the NVS flash storage
     ESP_ERROR_CHECK(nvs_flash_init());
     // Open the NVS namespace
