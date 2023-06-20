@@ -6,7 +6,6 @@ In short it allows you to take any object you want and save it directly to nvs a
 
 ### Usage
 
-
 1. Create the NVSManager object. The parameter is the name of the storage location.
 
 ```c++
@@ -17,7 +16,7 @@ NVSManager nvsManager = new NVSManager("storage");
 
 ```c++
 
-class WifiNetwork : public ISerializable {
+class WifiNetwork : public I_Serializable {
     //attributes you want to save 
     std::string ssid;
     std::string password;
