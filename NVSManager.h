@@ -6,8 +6,16 @@
 #include "nvs.h"
 #include <string>
 
-// Forward declaration of the serializable interface
-class I_Serializable;
+
+// This is the interface that all serializable classes must implement in order to be saved to NVS
+class I_Serializable {
+public:
+    //virtual ~I_Serializable() {}
+    // Each serializable class must provide these methods:
+    virtual std::string serialize() const = 0;
+    virtual void deserialize(const std::string& serialized) = 0;
+};
+
 
 class NVSManager {
 public:
@@ -42,15 +50,6 @@ public:
 
 private:
     nvs_handle_t nvsHandle;
-};
-
-// This is the interface that all serializable classes must implement in order to be saved to NVS
-class I_Serializable {
-public:
-    //virtual ~I_Serializable() {}
-    // Each serializable class must provide these methods:
-    virtual std::string serialize() const = 0;
-    virtual void deserialize(const std::string& serialized) = 0;
 };
 
 

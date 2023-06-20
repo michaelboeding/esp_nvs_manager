@@ -21,7 +21,7 @@ class WifiNetwork : public I_Serializable {
     std::string ssid;
     std::string password;
 
-    std::string serialize() const override {
+    std::string serialize() override {
         //implement how you want to serialize the object here and what attributes need to be serialized
     }
 
@@ -29,6 +29,7 @@ class WifiNetwork : public I_Serializable {
         //implement how you want to deserialize the obect 
 
     }
+    
 };
 
 ```
