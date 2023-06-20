@@ -13,7 +13,7 @@ public:
     //virtual ~I_Serializable() {}
     // Each serializable class must provide these methods:
     virtual std::string serialize() = 0;
-    virtual void deserialize(const std::string& serialized) = 0;
+    virtual void deserialize(std::string& serialized) = 0;
 };
 
 
@@ -24,7 +24,7 @@ public:
     ~NVSManager();
     //template functions - note these have to be in the header file not the cpp file due to the way templates work
 
-    esp_err_t save(const std::string& key, const I_Serializable& object) {
+    esp_err_t save(const std::string& key, I_Serializable& object) {
         // Serialize the object to a string
         std::string serialized = object.serialize();
         // Save the serialized object to NVS
