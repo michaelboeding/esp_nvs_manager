@@ -1,3 +1,6 @@
+#ifndef NVS_MANAGER_H
+#define NVS_MANAGER_H
+
 #include "nvs_flash.h"
 #include "esp_system.h"
 #include "nvs.h"
@@ -5,8 +8,10 @@
 #include <vector>
 #include <sstream>
 #include <iostream>
-#include <cereal/archives/binary.hpp>
-#include <cereal/types/vector.hpp>
+
+#include "cereal/archives/binary.hpp"
+
+
 
 class NVSManager {
 public:
@@ -114,3 +119,6 @@ public:
 private:
     nvs_handle_t nvsHandle;
 };
+
+
+#endif //NVS_MANAGER_H
