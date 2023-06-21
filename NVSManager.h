@@ -5,23 +5,23 @@
 #include "esp_system.h"
 #include "nvs.h"
 #include <string>
-
-
-// This is the interface that all serializable classes must implement in order to be saved to NVS
-class I_Serializable {
-public:
-    //virtual ~I_Serializable() {}
-    // Each serializable class must provide these methods:
-    virtual std::string serialize() = 0;
-    virtual void deserialize(std::string& serialized) = 0;
-};
-
+#include "I_Serializable.h"
 
 class NVSManager {
 public:
     //constructor and destructor
-    NVSManager(std::string namespaceName);
-    ~NVSManager();
+    NVSManager(const std::string namespaceName) {
+        // Initialize the NVS flash storage
+        ESP_ERROR_CHECK(nvs_flash_init());
+        // Open the NVS namespace
+        ESP_ERROR_CHECK(nvs_open(namespaceName.c_str(), NVS_READWRITE, &nvsHandle));
+    }
+
+    ~NVSManager() {
+        // Close the NVS handle
+        nvs_close(nvsHandle);
+    }
+
     //template functions - note these have to be in the header file not the cpp file due to the way templates work
 
     esp_err_t save(const std::string& key, I_Serializable& object) {
