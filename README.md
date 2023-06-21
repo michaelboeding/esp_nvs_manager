@@ -1,8 +1,36 @@
 ### NVSManager 
 
 This component is used to save and load data to NVS by using the concept of templates and serialization. 
-In short it allows you to take any object you want and save it directly to nvs and reterive it later as long as you conform to the interface. 
+In short it allows you to take any object you want and save it directly to nvs and reterive it later using cereal to serialize and deserialize it. 
 
+
+### Setup 
+
+1. Clone with submodules. This is using the cereal lib for serilization which is added as a submodule. 
+
+```c++
+git clone --recurse-submodules <repository_url>
+```
+
+2. Make sure that the path to the cereal module is defined in your CMakeLists.txt in the main folder. 
+
+```txt
+idf_component_register(SRCS "main.cpp" INCLUDE_DIRS "./components/esp_nvs_manager/libs/cereal/include/" ".")
+
+```
+
+3. You may need to disable certain compiler flagss
+
+```c++ 
+idf.py menuconfig 
+
+Once in the options menu go to:
+
+*  Compiler Options -> Enable C++ exceptions 
+
+* Compiler Options -> Enable C++ run-time type info (RTTI)
+
+```
 
 ### Usage
 
@@ -102,16 +130,17 @@ NVSManager nvsManager = new NVSManager("networkStorage");
 
 ```c++
 
+    esp_err_t err;
     NVSManager* nvsManager1 = new NVSManager("wifiStorage");
 
     //use with a vector of networks
-    std::vector<WifiNetwork*> networks;
+    std::vector<WifiNetwork> networks;
 
     std::cout << "Saving vector of networks" << std::endl;
     //create three networks
-    WifiNetwork* network1 = new WifiNetwork("Network1", "pass1");
-    WifiNetwork* network2 = new WifiNetwork("Network2", "pass2");
-    WifiNetwork* network3 = new WifiNetwork("Network3", "pass3");
+    WifiNetwork network1 = WifiNetwork("Network1", "pass1");
+    WifiNetwork network2 = WifiNetwork("Network2", "pass2");
+    WifiNetwork network3 = WifiNetwork("Network3", "pass3");
     //add them to the vector
     networks.push_back(network1);
     networks.push_back(network2);
@@ -119,12 +148,13 @@ NVSManager nvsManager = new NVSManager("networkStorage");
     //save the vector to the nvs manager
     err = nvsManager1->saveVector("vector", networks);
     //load the vector from the nvs manager
-    std::vector<WifiNetwork*> loadedNetworks;
+    std::vector<WifiNetwork> loadedNetworks;
     err = nvsManager1->loadVector("vector",loadedNetworks);
     //print the loaded networks
     for(int i = 0; i < loadedNetworks.size(); i++){
-        std::cout << "Network " << i << ": " << loadedNetworks[i]->getSsid() << std::endl;
+        std::cout << "Network " << i << ": " << loadedNetworks[i].getSsid() << std::endl;
     }
+
 ```
 
 
