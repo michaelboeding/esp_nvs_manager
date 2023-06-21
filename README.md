@@ -21,14 +21,8 @@ class WifiNetwork : public I_Serializable {
     std::string ssid;
     std::string password;
 
-    std::string serialize() override {
-        //implement how you want to serialize the object here and what attributes need to be serialized
-    }
-
-    void deserialize(const std::string& serialized) override {
-        //implement how you want to deserialize the obect 
-
-    }
+    std::string serialize() override;
+    void deserialize(std::string& serialized) override;
     
 };
 
@@ -37,24 +31,48 @@ class WifiNetwork : public I_Serializable {
 3. For example if I wanted to serialize the data for the WifiNetwork we would do it by implementing the serialize and deserialize methods like this 
 
 ```c++
-    std::string serialize() const {
+        
+    //override method used to serialize the object
+    std::string WifiNetwork::serialize() {
         //create a stream and then append the items with new lines 
         std::ostringstream oss;
-        oss << ssid << '\0' << password;
+        oss << this->ssid << '\0' << this->password;
         return oss.str();
     }
 
-    void deserialize(const std::string& serialized) {
+    void WifiNetwork::deserialize(std::string& serialized) {
         //deseralize the items in the correct order
         std::istringstream iss(serialized);
         //get the values and set them 
         std::getline(iss, this->ssid, '\0');
         std::getline(iss, this->password, '\0');
+        //print out the values
+        std::cout << "SSID: " << this->ssid << std::endl;
+        std::cout << "Password: " << this->password << std::endl;
     }
 
 ```
 
+4. Full usage 
 
 
+```c++
+void app_main(){
+    //MARK: SAVE THE NETWORK
+    esp_err_t err;
+    //create the nvs manager with the namespace storage refering to the nvs partition
+    NVSManager* nvsManager = new NVSManager("storage");
+    //create the wifi network object to save 
+    WifiNetwork* network = new WifiNetwork("MichaelsWifi", "Password123");
+    //save the network to the nvs manager
+    err = nvsManager->save("wifiNetwork", *network);
+
+    //MARK: LOAD THE NETWORK
+    WifiNetwork wifiNetwork;
+    //load the object 
+    err = nvsManager->load("wifiNetwork", wifiNetwork);
+}
+
+```
 
 
