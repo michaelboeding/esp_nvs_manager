@@ -76,3 +76,51 @@ void app_main(){
 ```
 
 
+### Advanced Usage 
+
+If you would like to save vectors of objects this component allows you to do that also.
+
+1. Create the NVSManager object. The parameter is the name of the storage location.
+
+```c++
+NVSManager nvsManager = new NVSManager("networkStorage");
+```
+
+2. You need to inheret the I_Serializable interface and then implement both the serialize and deserialize methods in order to save the object. Same as previously. 
+
+3. Full Usage 
+
+
+```c++
+
+
+    NVSManager* nvsManager1 = new NVSManager("wifiStorage");
+
+    //use with a vector of networks
+    std::vector<WifiNetwork*> networks;
+
+    std::cout << "Saving vector of networks" << std::endl;
+
+    //create three networks
+    WifiNetwork* network1 = new WifiNetwork("Network1", "pass1");
+    WifiNetwork* network2 = new WifiNetwork("Network2", "pass2");
+    WifiNetwork* network3 = new WifiNetwork("Network3", "pass3");
+    //add them to the vector
+    networks.push_back(network1);
+    networks.push_back(network2);
+    networks.push_back(network3);
+    //save the vector to the nvs manager
+    err = nvsManager1->saveVector("vector", networks);
+    //load the vector from the nvs manager
+    std::vector<WifiNetwork*> loadedNetworks;
+    err = nvsManager1->loadVector("vector",loadedNetworks);
+    //print the loaded networks
+    for(int i = 0; i < loadedNetworks.size(); i++){
+        std::cout << "Network " << i << ": " << loadedNetworks[i]->getSsid() << std::endl;
+    }
+
+```
+
+
+
+
