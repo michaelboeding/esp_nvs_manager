@@ -131,11 +131,10 @@ NVSManager nvsManager = new NVSManager("networkStorage");
 ```c++
 
     esp_err_t err;
+    //create the nvs manager
     NVSManager* nvsManager1 = new NVSManager("wifiStorage");
-
     //use with a vector of networks
     std::vector<WifiNetwork> networks;
-
     std::cout << "Saving vector of networks" << std::endl;
     //create three networks
     WifiNetwork network1 = WifiNetwork("Network1", "pass1");
