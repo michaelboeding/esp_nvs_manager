@@ -12,49 +12,61 @@ In short it allows you to take any object you want and save it directly to nvs a
 NVSManager nvsManager = new NVSManager("storage");
 ```
 
-2. You need to inheret the I_Serializable interface and then implement both the serialize and deserialize methods in order to save the object. 
+2. You need to make your class serializable with Cereal. This is done by adding a serialize method in your class that takes an Archive object. The serialize method should use the Archive object to serialize all data members that need to be saved.
 
 ```c++
 
-class WifiNetwork : public I_Serializable {
-    //attributes you want to save 
+#include <cereal/types/string.hpp>
+
+class WifiNetwork {
+public:
+    // The data members you want to save.
     std::string ssid;
     std::string password;
 
-    std::string serialize() override;
-    void deserialize(std::string& serialized) override;
-    
+    template <class Archive>
+    void serialize(Archive &ar) {
+        ar(ssid, password);
+    }
 };
 
 ```
 
-3. For example if I wanted to serialize the data for the WifiNetwork we would do it by implementing the serialize and deserialize methods like this 
+3. The NVSManager's save and load methods can be used to save and load objects.
+
 
 ```c++
-        
-    //override method used to serialize the object
-    std::string WifiNetwork::serialize() {
-        //create a stream and then append the items with new lines 
-        std::ostringstream oss;
-        oss << this->ssid << '\0' << this->password;
-        return oss.str();
+void app_main() {
+    // Create the NVS manager with the namespace "storage" referring to the NVS partition.
+    NVSManager nvsManager("storage");
+    
+    // Create a WifiNetwork object to save.
+    WifiNetwork network{"MySSID", "MyPassword"};
+    
+    // Save the network to NVS.
+    esp_err_t err = nvsManager.save("wifiNetwork", network);
+    if (err != ESP_OK) {
+        // Handle error...
     }
-
-    void WifiNetwork::deserialize(std::string& serialized) {
-        //deseralize the items in the correct order
-        std::istringstream iss(serialized);
-        //get the values and set them 
-        std::getline(iss, this->ssid, '\0');
-        std::getline(iss, this->password, '\0');
-        //print out the values
-        std::cout << "SSID: " << this->ssid << std::endl;
-        std::cout << "Password: " << this->password << std::endl;
+    
+    // Load the network from NVS.
+    WifiNetwork loadedNetwork;
+    err = nvsManager.load("wifiNetwork", loadedNetwork);
+    if (err != ESP_OK) {
+        // Handle error...
     }
+    
+    // The loadedNetwork object now contains the loaded data.
+    std::cout << "SSID: " << loadedNetwork.ssid << std::endl;
+    std::cout << "Password: " << loadedNetwork.password << std::endl;
+}
 
 ```
 
-4. Full usage 
+### Advanced Usage
 
+
+NVSManager can also save and load vectors of objects. The usage is similar to saving and loading single objects:
 
 ```c++
 void app_main(){
@@ -86,13 +98,9 @@ If you would like to save vectors of objects this component allows you to do tha
 NVSManager nvsManager = new NVSManager("networkStorage");
 ```
 
-2. You need to inheret the I_Serializable interface and then implement both the serialize and deserialize methods in order to save the object. Same as previously. 
-
-3. Full Usage 
-
+2. Full Usage 
 
 ```c++
-
 
     NVSManager* nvsManager1 = new NVSManager("wifiStorage");
 
@@ -100,7 +108,6 @@ NVSManager nvsManager = new NVSManager("networkStorage");
     std::vector<WifiNetwork*> networks;
 
     std::cout << "Saving vector of networks" << std::endl;
-
     //create three networks
     WifiNetwork* network1 = new WifiNetwork("Network1", "pass1");
     WifiNetwork* network2 = new WifiNetwork("Network2", "pass2");
@@ -118,28 +125,6 @@ NVSManager nvsManager = new NVSManager("networkStorage");
     for(int i = 0; i < loadedNetworks.size(); i++){
         std::cout << "Network " << i << ": " << loadedNetworks[i]->getSsid() << std::endl;
     }
-
 ```
-
-
-### Advanced Usage Cont
-
-This library gives you a lot of control over the methods you use when seralizing and deseralizing your data by implementing the methods yourself. There happens to be some popular libraries that you could consider using. 
-
-
-
-1. Boost Serialization: Boost is a robust, general-purpose library, and its serialization component is no exception. It provides a simple and flexible API for serialization of complex objects, supports versioning, and handles pointers and other complex types well.
-
-2. Cereal: cereal is a header-only C++11 serialization library that's easy to use and doesn't require a separate build step like protobuf does. It's particularly well-suited to projects where simplicity and integration ease are priorities.
-
-3. protobuf (Protocol Buffers): Protocol Buffers, developed by Google, is a powerful, efficient, and automated mechanism for serializing structured data. It supports several languages, making it a good choice for cross-platform and cross-language projects.
-Cap'n Proto: Designed by the original author of protobuf, Cap'n Proto is an extremely efficient protocol that's designed to be very fast. It even allows you to use the serialized data directly without parsing.
-
-4. FlatBuffers: Developed by Google, FlatBuffers is another very efficient serialization library. Like Cap'n Proto, it allows zero-copy reads for maximum speed.
-
-
-Example 
-
-
 
 
