@@ -1,0 +1,3 @@
+[submodule "libs/cereal"]
+	path = libs/cereal
+	url = git@github.com:USCiLab/cereal.git
