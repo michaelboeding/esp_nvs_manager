@@ -122,5 +122,24 @@ NVSManager nvsManager = new NVSManager("networkStorage");
 ```
 
 
+### Advanced Usage Cont
+
+This library gives you a lot of control over the methods you use when seralizing and deseralizing your data by implementing the methods yourself. There happens to be some popular libraries that you could consider using. 
+
+
+
+1. Boost Serialization: Boost is a robust, general-purpose library, and its serialization component is no exception. It provides a simple and flexible API for serialization of complex objects, supports versioning, and handles pointers and other complex types well.
+
+2. Cereal: cereal is a header-only C++11 serialization library that's easy to use and doesn't require a separate build step like protobuf does. It's particularly well-suited to projects where simplicity and integration ease are priorities.
+
+3. protobuf (Protocol Buffers): Protocol Buffers, developed by Google, is a powerful, efficient, and automated mechanism for serializing structured data. It supports several languages, making it a good choice for cross-platform and cross-language projects.
+Cap'n Proto: Designed by the original author of protobuf, Cap'n Proto is an extremely efficient protocol that's designed to be very fast. It even allows you to use the serialized data directly without parsing.
+
+4. FlatBuffers: Developed by Google, FlatBuffers is another very efficient serialization library. Like Cap'n Proto, it allows zero-copy reads for maximum speed.
+
+
+Example 
+
+
 
 
